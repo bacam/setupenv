@@ -1,0 +1,100 @@
+# Add and remove directories from the environment.
+# Written specifically for bash on Linux, should easily adapt to bash on
+# other UNIX-like systems.
+# bacam@tardis.ed.ac.uk, 2001-04-20.
+
+which python >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  SUE_PYTHON_VERSION=`python -c "import sys; a,b,_,_,_ = sys.version_info; print '%d.%d' % (a,b)"`
+else
+  # Arbitrary default
+  SUE_PYTHON_VERSION=2.6
+fi
+SUE_PYTHON_PATH=lib/python$SUE_PYTHON_VERSION/site-packages
+
+function sue_addtopath () {
+	if [ -z "${!1}" ]; then
+		eval export $1=\""$2"\"
+	else
+		eval export $1=\""$2"\":\"\$$1\"
+	fi
+}
+
+# XDG will not use the default values if the environment variable is set, so
+# add them ourselves
+function sue_addtopath_def () {
+	if [ -z "${!1}" ]; then
+		eval export $1=\""$2"\":\""$3"\"
+	else
+		eval export $1=\""$2"\":\"\$$1\"
+	fi
+}
+
+function setupenv () {
+	if [ ! -d "$1" ]; then
+		echo "setupenv: $1 is not a directory"
+		return
+	fi
+        canonpath=$(cd "$1"; pwd -L)
+	[ "-d $canonpath/bin" ] && sue_addtopath PATH "$canonpath/bin"
+	[ "-d $canonpath/lib" ] && sue_addtopath LD_LIBRARY_PATH "$canonpath/lib"
+	[ "-d $canonpath/lib" ] && sue_addtopath LIBRARY_PATH "$canonpath/lib"
+	[ "-d $canonpath/include" ] && sue_addtopath C_INCLUDE_PATH "$canonpath/include"
+	[ "-d $canonpath/include" ] && sue_addtopath CPLUS_INCLUDE_PATH "$canonpath/include"
+	[ "-d $canonpath/include" ] && sue_addtopath OBJC_INCLUDE_PATH "$canonpath/include"
+	[ "-d $canonpath/$SUE_PYTHON_PATH" ] && sue_addtopath PYTHONPATH "$canonpath/$SUE_PYTHON_PATH"
+	[ "-d $canonpath/lib/python" ] && sue_addtopath PYTHONPATH "$canonpath/lib/python"
+	# The following paths are special on the (Linux) systems I use,
+	# since a trailing : is used to add the normal search path.
+	[ "-d $canonpath/man" ] && export MANPATH="$canonpath/man:$MANPATH"
+	[ "-d $canonpath/info" ] && export INFOPATH="$canonpath/info:$INFOPATH"
+	# Paths where we need to add a default
+	# http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+	[ "-d $canonpath/share" ] && sue_addtopath_def XDG_DATA_DIRS "$canonpath/share" "/usr/local/share/:/usr/share/"
+	[ "-d $canonpath/etc/xdg" ] && sue_addtopath_def XDG_CONFIG_DIRS "$canonpath/etc/xdg" "/etc/xdg"
+        :
+}
+
+function sue_removefrompath () {
+	local new elt last oldifs="$IFS"
+	# Lame, but I can't find a better method.
+	last="`echo -n ${!1} | tail -c 1`"
+	IFS=:
+	for elt in ${!1}; do
+		if [ "$elt" != "$2" ]; then
+			if [ -n "$new" ]; then
+				new="$new:$elt"
+			else
+				new="$elt"
+			fi
+		fi
+	done
+	IFS="$oldifs"
+
+	if [ "$last" == ":" -a -n "$new" ]; then
+		new="$new:"
+	fi
+
+	if [ -z "$new" ]; then
+		# Unset an empty path
+		unset $1
+	else
+		eval $1=\""$new"\"
+	fi
+}
+
+function removeenv () {
+        canonpath=$(cd "$1"; pwd -L)
+	sue_removefrompath PATH "$canonpath/bin"
+	sue_removefrompath LD_LIBRARY_PATH "$canonpath/lib"
+	sue_removefrompath LIBRARY_PATH "$canonpath/lib"
+	sue_removefrompath C_INCLUDE_PATH "$canonpath/include"
+	sue_removefrompath CPLUS_INCLUDE_PATH "$canonpath/include"
+	sue_removefrompath OBJC_INCLUDE_PATH "$canonpath/include"
+        sue_removefrompath PYTHONPATH "$canonpath/$SUE_PYTHON_PATH"
+        sue_removefrompath PYTHONPATH "$canonpath/lib/python"
+	sue_removefrompath MANPATH "$canonpath/man"
+	sue_removefrompath INFOPATH "$canonpath/info"
+	sue_removefrompath XDG_DATA_DIRS "$canonpath/share"
+	sue_removefrompath XDG_CONFIG_DIRS "$canonpath/etc/xdg"
+}
