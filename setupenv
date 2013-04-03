@@ -47,6 +47,7 @@ function setupenv () {
 	# The following paths are special on the (Linux) systems I use,
 	# since a trailing : is used to add the normal search path.
 	[ "-d $canonpath/man" ] && export MANPATH="$canonpath/man:$MANPATH"
+	[ "-d $canonpath/share/man" ] && export MANPATH="$canonpath/share/man:$MANPATH"
 	[ "-d $canonpath/info" ] && export INFOPATH="$canonpath/info:$INFOPATH"
 	# Paths where we need to add a default
 	# http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
@@ -94,6 +95,7 @@ function removeenv () {
         sue_removefrompath PYTHONPATH "$canonpath/$SUE_PYTHON_PATH"
         sue_removefrompath PYTHONPATH "$canonpath/lib/python"
 	sue_removefrompath MANPATH "$canonpath/man"
+	sue_removefrompath MANPATH "$canonpath/share/man"
 	sue_removefrompath INFOPATH "$canonpath/info"
 	sue_removefrompath XDG_DATA_DIRS "$canonpath/share"
 	sue_removefrompath XDG_CONFIG_DIRS "$canonpath/etc/xdg"
