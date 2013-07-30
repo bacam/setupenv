@@ -21,6 +21,7 @@ function sue_addtopath () {
 }
 
 function add_path () {
+	local canonpath
         canonpath=$(cd "$1"; pwd -L)
 	sue_addtopath PATH "$canonpath"
 }
@@ -36,6 +37,7 @@ function sue_addtopath_def () {
 }
 
 function setupenv () {
+	local canonpath
 	if [ ! -d "$1" ]; then
 		echo "setupenv: $1 is not a directory"
 		return
@@ -91,11 +93,13 @@ function sue_removefrompath () {
 }
 
 function remove_path () {
+	local canonpath
         canonpath=$(cd "$1"; pwd -L)
 	sue_removefrompath PATH "$canonpath"
 }
 
 function removeenv () {
+	local canonpath
         canonpath=$(cd "$1"; pwd -L)
 	sue_removefrompath PATH "$canonpath/bin"
 	sue_removefrompath LD_LIBRARY_PATH "$canonpath/lib"
