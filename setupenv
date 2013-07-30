@@ -20,6 +20,11 @@ function sue_addtopath () {
 	fi
 }
 
+function add_path () {
+        canonpath=$(cd "$1"; pwd -L)
+	sue_addtopath PATH "$canonpath"
+}
+
 # XDG will not use the default values if the environment variable is set, so
 # add them ourselves
 function sue_addtopath_def () {
@@ -83,6 +88,11 @@ function sue_removefrompath () {
 	else
 		eval $1=\""$new"\"
 	fi
+}
+
+function remove_path () {
+        canonpath=$(cd "$1"; pwd -L)
+	sue_removefrompath PATH "$canonpath"
 }
 
 function removeenv () {
