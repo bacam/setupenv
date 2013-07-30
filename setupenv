@@ -1,7 +1,7 @@
 # Add and remove directories from the environment.
 # Written specifically for bash on Linux, should easily adapt to bash on
 # other UNIX-like systems.
-# bacam@tardis.ed.ac.uk, 2001-04-20.
+# - bacam@z273.org.uk
 
 which python >/dev/null 2>&1
 if [ $? -eq 0 ]; then
