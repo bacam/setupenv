@@ -43,24 +43,24 @@ function setupenv () {
 		return
 	fi
         canonpath=$(cd "$1"; pwd -L)
-	[ "-d $canonpath/bin" ] && sue_addtopath PATH "$canonpath/bin"
-	[ "-d $canonpath/lib" ] && sue_addtopath LD_LIBRARY_PATH "$canonpath/lib"
-	[ "-d $canonpath/lib" ] && sue_addtopath LIBRARY_PATH "$canonpath/lib"
-	[ "-d $canonpath/lib/pkgconfig" ] && sue_addtopath PKG_CONFIG_PATH "$canonpath/lib/pkgconfig"
-	[ "-d $canonpath/include" ] && sue_addtopath C_INCLUDE_PATH "$canonpath/include"
-	[ "-d $canonpath/include" ] && sue_addtopath CPLUS_INCLUDE_PATH "$canonpath/include"
-	[ "-d $canonpath/include" ] && sue_addtopath OBJC_INCLUDE_PATH "$canonpath/include"
-	[ "-d $canonpath/$SUE_PYTHON_PATH" ] && sue_addtopath PYTHONPATH "$canonpath/$SUE_PYTHON_PATH"
-	[ "-d $canonpath/lib/python" ] && sue_addtopath PYTHONPATH "$canonpath/lib/python"
+	[ -d "$canonpath/bin" ] && sue_addtopath PATH "$canonpath/bin"
+	[ -d "$canonpath/lib" ] && sue_addtopath LD_LIBRARY_PATH "$canonpath/lib"
+	[ -d "$canonpath/lib" ] && sue_addtopath LIBRARY_PATH "$canonpath/lib"
+	[ -d "$canonpath/lib/pkgconfig" ] && sue_addtopath PKG_CONFIG_PATH "$canonpath/lib/pkgconfig"
+	[ -d "$canonpath/include" ] && sue_addtopath C_INCLUDE_PATH "$canonpath/include"
+	[ -d "$canonpath/include" ] && sue_addtopath CPLUS_INCLUDE_PATH "$canonpath/include"
+	[ -d "$canonpath/include" ] && sue_addtopath OBJC_INCLUDE_PATH "$canonpath/include"
+	[ -d "$canonpath/$SUE_PYTHON_PATH" ] && sue_addtopath PYTHONPATH "$canonpath/$SUE_PYTHON_PATH"
+	[ -d "$canonpath/lib/python" ] && sue_addtopath PYTHONPATH "$canonpath/lib/python"
 	# The following paths are special on the (Linux) systems I use,
 	# since a trailing : is used to add the normal search path.
-	[ "-d $canonpath/man" ] && export MANPATH="$canonpath/man:$MANPATH"
-	[ "-d $canonpath/share/man" ] && export MANPATH="$canonpath/share/man:$MANPATH"
-	[ "-d $canonpath/info" ] && export INFOPATH="$canonpath/info:$INFOPATH"
+	[ -d "$canonpath/man" ] && export MANPATH="$canonpath/man:$MANPATH"
+	[ -d "$canonpath/share/man" ] && export MANPATH="$canonpath/share/man:$MANPATH"
+	[ -d "$canonpath/info" ] && export INFOPATH="$canonpath/info:$INFOPATH"
 	# Paths where we need to add a default
 	# http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
-	[ "-d $canonpath/share" ] && sue_addtopath_def XDG_DATA_DIRS "$canonpath/share" "/usr/local/share/:/usr/share/"
-	[ "-d $canonpath/etc/xdg" ] && sue_addtopath_def XDG_CONFIG_DIRS "$canonpath/etc/xdg" "/etc/xdg"
+	[ -d "$canonpath/share" ] && sue_addtopath_def XDG_DATA_DIRS "$canonpath/share" "/usr/local/share/:/usr/share/"
+	[ -d "$canonpath/etc/xdg" ] && sue_addtopath_def XDG_CONFIG_DIRS "$canonpath/etc/xdg" "/etc/xdg"
         :
 }
 
