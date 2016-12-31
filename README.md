@@ -17,4 +17,10 @@ then you can use the package after entering the following command:
 
     setupenv /my/favourite/directory
 
-There's also a `removeenv` command to undo the changes, and `add_path` and `remove_path` to just add a single directory to the command line search `PATH` variable.
+Other commands:
+
+* `removeenv` undos the changes from `setupenv` for the given path
+* `printsetup` lists all of the directories that you have set up
+* `add_path` adds a single directory to the command line search `PATH` variable (and nothing else)
+* `remove_path` undos an `add_path`
+* `printpath` prints `PATH` in a more readable form
