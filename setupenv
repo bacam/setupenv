@@ -43,6 +43,7 @@ function setupenv () {
 		return
 	fi
         canonpath=$(cd "$1"; pwd -L)
+	sue_addtopath SUE_SETUP "$canonpath"
 	[ -d "$canonpath/bin" ] && sue_addtopath PATH "$canonpath/bin"
 	[ -d "$canonpath/lib" ] && sue_addtopath LD_LIBRARY_PATH "$canonpath/lib"
 	[ -d "$canonpath/lib" ] && sue_addtopath LIBRARY_PATH "$canonpath/lib"
@@ -92,6 +93,23 @@ function sue_removefrompath () {
 	fi
 }
 
+function sue_printpath () {
+	local elt oldifs="$IFS"
+	IFS=:
+	for elt in ${!1}; do
+		echo "$elt"
+	done
+	IFS="$oldifs"
+}
+
+function printpath () {
+	sue_printpath PATH
+}
+
+function printsetup () {
+	sue_printpath SUE_SETUP
+}
+
 function remove_path () {
 	local canonpath
         canonpath=$(cd "$1"; pwd -L)
@@ -101,6 +119,7 @@ function remove_path () {
 function removeenv () {
 	local canonpath
         canonpath=$(cd "$1"; pwd -L)
+	sue_removefrompath SUE_SETUP "$canonpath"
 	sue_removefrompath PATH "$canonpath/bin"
 	sue_removefrompath LD_LIBRARY_PATH "$canonpath/lib"
 	sue_removefrompath LIBRARY_PATH "$canonpath/lib"
